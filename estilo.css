@@ -1,3 +1,6 @@
+/* =========================================
+   CONFIGURACIÓN GENERAL
+========================================= */
 
 * {
     box-sizing: border-box;
@@ -9,19 +12,22 @@ html,
 body {
     width: 100%;
     height: 100%;
+
     overflow: hidden;
 }
 
 body {
+
     background:
         radial-gradient(
             circle at center,
-            #62584d 0%,
-            #302c28 55%,
-            #171614 100%
+            #8c8172 0%,
+            #514b44 45%,
+            #292622 100%
         );
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
@@ -32,15 +38,17 @@ body {
 }
 
 
-/* =================================
+/* =========================================
    ESCENARIO
-================================= */
+========================================= */
 
 .escenario {
+
     width: 100vw;
     height: 100vh;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -48,47 +56,47 @@ body {
 }
 
 
-/* =================================
+/* =========================================
    LIBRO
-================================= */
+========================================= */
 
 .libro {
+
     position: relative;
 
-    width: min(86vw, 420px);
-    height: min(78vh, 600px);
+    width: min(86vw, 430px);
+
+    height: min(78vh, 620px);
 
     transform-style: preserve-3d;
 
-    /*
-       Ligera inclinación para dar
-       sensación de objeto físico.
-    */
     transform:
-        rotateX(3deg)
-        rotateY(-3deg);
+        rotateX(2deg)
+        rotateY(-2deg);
 
     transition:
         transform .3s ease;
 }
 
 
-/* =================================
-   SOMBRA DEL LIBRO
-================================= */
+/* =========================================
+   SOMBRA
+========================================= */
 
 .libro::before {
+
     content: "";
 
     position: absolute;
 
-    width: 92%;
+    width: 90%;
     height: 25px;
 
-    left: 4%;
+    left: 5%;
     bottom: -25px;
 
-    background: rgba(0,0,0,.5);
+    background:
+        rgba(0,0,0,.45);
 
     filter: blur(18px);
 
@@ -101,160 +109,126 @@ body {
 }
 
 
-/* =================================
-   TAPAS
-================================= */
+/* =========================================
+   TODAS LAS HOJAS
+========================================= */
 
-.tapa {
+.hoja {
+
     position: absolute;
 
     inset: 0;
 
-    border-radius:
-        5px 15px 15px 5px;
+    background:
 
-    transform-style: preserve-3d;
+        linear-gradient(
+            90deg,
+            rgba(80,60,40,.08),
+            transparent 8%,
+            transparent 92%,
+            rgba(80,60,40,.08)
+        ),
+
+        linear-gradient(
+            180deg,
+            #fffdf6,
+            #f5efdf
+        );
+
+    border-radius:
+        3px 12px 12px 3px;
+
+    border: 1px solid
+        rgba(100,80,50,.18);
+
+    transform-origin:
+        left center;
+
+    transform-style:
+        preserve-3d;
+
+    box-shadow:
+
+        0 10px 25px
+        rgba(0,0,0,.35),
+
+        inset 0 0 25px
+        rgba(100,80,50,.08);
 
     overflow: hidden;
+
+    transition:
+
+        transform
+        .9s
+        cubic-bezier(
+            .2,
+            .75,
+            .2,
+            1
+        );
 }
 
 
-/* =================================
+/* =========================================
    PORTADA
-================================= */
+========================================= */
 
 .portada {
 
     z-index: 50;
 
-    transform-origin: left center;
+    transform-origin:
+        left center;
 
     background:
+
         linear-gradient(
             90deg,
-            rgba(0,0,0,.25),
-            transparent 8%,
-            transparent 88%,
-            rgba(0,0,0,.25)
+            rgba(0,0,0,.10),
+            transparent 10%,
+            transparent 90%,
+            rgba(0,0,0,.10)
         ),
-        #b9824c;
+
+        #f8f1df;
 
     box-shadow:
-        8px 12px 30px rgba(0,0,0,.5),
-        inset 0 0 30px rgba(70,35,10,.25);
 
-    transition:
-        transform .9s
-        cubic-bezier(.2,.75,.2,1);
+        0 15px 35px
+        rgba(0,0,0,.45),
+
+        inset 0 0 25px
+        rgba(100,80,50,.08);
 }
 
 
-/*
-   Imagen de la portada
-*/
-
-.portada img {
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    display: block;
-
-    pointer-events: none;
-}
-
-
-/*
-   Textura de cartón
-*/
-
-.textura {
-
-    position: absolute;
-
-    inset: 0;
-
-    pointer-events: none;
-
-    opacity: .22;
-
-    background-image:
-
-        repeating-linear-gradient(
-            0deg,
-            transparent 0px,
-            rgba(255,255,255,.15) 1px,
-            transparent 2px
-        ),
-
-        repeating-linear-gradient(
-            90deg,
-            transparent 0px,
-            rgba(60,30,10,.12) 1px,
-            transparent 3px
-        );
-
-    mix-blend-mode: multiply;
-}
-
-
-/* =================================
+/* =========================================
    CONTRAPORTADA
-================================= */
+========================================= */
 
-.trasera {
+.contraportada {
 
     background:
+
         linear-gradient(
             90deg,
-            #754a28,
-            #a36b3d,
-            #704521
-        );
+            rgba(80,60,40,.08),
+            transparent 10%,
+            transparent 90%,
+            rgba(80,60,40,.08)
+        ),
 
-    box-shadow:
-        8px 10px 25px rgba(0,0,0,.45);
+        #f5edda;
 
     transform:
         translateZ(-12px);
 }
 
 
-/* =================================
-   HOJAS
-================================= */
-
-.hoja {
-
-    position: absolute;
-
-    inset: 5px;
-
-    background: #eee3ce;
-
-    transform-origin: left center;
-
-    transform-style: preserve-3d;
-
-    border-radius:
-        3px 10px 10px 3px;
-
-    box-shadow:
-        3px 3px 12px rgba(0,0,0,.25);
-
-    transition:
-        transform .9s
-        cubic-bezier(.2,.75,.2,1);
-
-    overflow: hidden;
-}
-
-
-/* =================================
-   IMAGEN DE CADA PÁGINA
-================================= */
+/* =========================================
+   CARAS
+========================================= */
 
 .cara,
 .reverso {
@@ -263,11 +237,17 @@ body {
 
     inset: 0;
 
-    backface-visibility: hidden;
+    backface-visibility:
+        hidden;
 
-    -webkit-backface-visibility: hidden;
+    -webkit-backface-visibility:
+        hidden;
 }
 
+
+/* =========================================
+   IMÁGENES
+========================================= */
 
 .cara img {
 
@@ -282,39 +262,42 @@ body {
 }
 
 
-/* =================================
-   PARTE TRASERA DE LA HOJA
-================================= */
+/* =========================================
+   REVERSO DE LAS HOJAS
+========================================= */
 
 .reverso {
 
     background:
+
         linear-gradient(
             90deg,
-            #ddd0b8,
-            #f2e9d7,
-            #d7c8ad
+            #e5dac5,
+            #faf5e8,
+            #ded1bb
         );
 
     transform:
         rotateY(180deg);
+
 }
 
 
-/* =================================
-   PÁGINA GIRADA
-================================= */
+/* =========================================
+   HOJA GIRADA
+========================================= */
 
 .hoja.volteada {
 
     transform:
         rotateY(-180deg);
+
 }
 
 
-/* =================================
-   BORDE DE LAS HOJAS
-================================= */
+/* =========================================
+   BORDE DE LA HOJA
+========================================= */
 
 .hoja::after {
 
@@ -325,23 +308,54 @@ body {
     top: 0;
     right: 0;
 
-    width: 12px;
+    width: 14px;
     height: 100%;
 
     background:
+
         linear-gradient(
             90deg,
             transparent,
-            rgba(0,0,0,.13)
+            rgba(0,0,0,.10)
         );
 
     pointer-events: none;
 }
 
 
-/* =================================
+/* =========================================
+   TEXTURA SUTIL DE PAPEL
+========================================= */
+
+.hoja::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .13;
+
+    background:
+
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(80,60,40,.08) 1px,
+            transparent 3px
+        );
+
+    mix-blend-mode:
+        multiply;
+}
+
+
+/* =========================================
    CELULAR
-================================= */
+========================================= */
 
 @media (max-width: 600px) {
 
@@ -361,15 +375,30 @@ body {
 }
 
 
-/* =================================
+/* =========================================
    CELULARES PEQUEÑOS
-================================= */
+========================================= */
 
 @media (max-height: 650px) {
 
     .libro {
 
-        height: 74vh;
+        height: 73vh;
+    }
+
+}
+
+
+/* =========================================
+   PANTALLAS MUY ANCHAS
+========================================= */
+
+@media (min-width: 900px) {
+
+    .libro {
+
+        width: 430px;
+        height: 620px;
     }
 
 }
