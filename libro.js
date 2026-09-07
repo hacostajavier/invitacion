@@ -1,17 +1,54 @@
 const libro = document.getElementById("libro");
-
 const portada = document.getElementById("portada");
 
 const hojas = Array.from(
     document.querySelectorAll(".hoja")
 );
 
-let pagina = 0;
+/* =================================
+   ORDEN REAL DE LAS HOJAS
+================================= */
+
+/*
+   La última .hoja será la CONTRAPORTADA.
+
+   Ejemplo:
+
+   HTML:
+   .hoja 0 = Hoja 1
+   .hoja 1 = Hoja 2
+   .hoja 2 = Hoja 3
+   .hoja 3 = Contraportada
+
+   Al pasar:
+   Portada → Hoja 1 → Hoja 2 → Hoja 3 → Contraportada
+*/
+
+const hojasInteriores = hojas.slice(0, -1);
+
+const contraportada =
+    hojas.length > 0
+        ? hojas[hojas.length - 1]
+        : null;
 
 
 /* =================================
-   ORDEN DE LAS HOJAS
+   PONER NOMBRE A LA CONTRAPORTADA
 ================================= */
+
+if (contraportada) {
+    contraportada.dataset.tipo = "contraportada";
+}
+
+
+/* =================================
+   ORDEN DE PROFUNDIDAD
+================================= */
+
+/*
+   La hoja que está adelante
+   debe tener mayor z-index.
+*/
 
 hojas.forEach((hoja, indice) => {
 
@@ -22,15 +59,15 @@ hojas.forEach((hoja, indice) => {
 
 
 /* =================================
-   VARIABLES DEL MOVIMIENTO
+   VARIABLES
 ================================= */
+
+let pagina = 0;
 
 let inicioX = 0;
 let inicioY = 0;
 
 let moviendo = false;
-
-let ultimaDireccion = 0;
 
 
 /* =================================
@@ -41,16 +78,50 @@ libro.addEventListener(
     "touchstart",
     function(e) {
 
-        const toque =
-            e.touches[0];
+        const toque = e.touches[0];
 
-        inicioX =
-            toque.clientX;
-
-        inicioY =
-            toque.clientY;
+        inicioX = toque.clientX;
+        inicioY = toque.clientY;
 
         moviendo = true;
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* =================================
+   MOVIMIENTO DEL DEDO
+================================= */
+
+libro.addEventListener(
+    "touchmove",
+    function(e) {
+
+        if (!moviendo) return;
+
+        const toque = e.touches[0];
+
+        const desplazamiento =
+            toque.clientX - inicioX;
+
+        let inclinacion =
+            desplazamiento / 25;
+
+        inclinacion =
+            Math.max(
+                -8,
+                Math.min(
+                    8,
+                    inclinacion
+                )
+            );
+
+        libro.style.transform =
+            `rotateX(2deg)
+             rotateY(${-2 + inclinacion}deg)`;
 
     },
     {
@@ -87,10 +158,13 @@ libro.addEventListener(
         moviendo = false;
 
 
-        /*
-          Si el movimiento es principalmente
-          vertical, no pasamos página.
-        */
+        /* Volver a posición normal */
+
+        libro.style.transform =
+            "rotateX(2deg) rotateY(-2deg)";
+
+
+        /* No pasar si es movimiento vertical */
 
         if (
             Math.abs(diferenciaX) <
@@ -100,9 +174,7 @@ libro.addEventListener(
         }
 
 
-        /*
-          Distancia mínima.
-        */
+        /* Distancia mínima */
 
         if (
             Math.abs(diferenciaX) < 35
@@ -111,10 +183,7 @@ libro.addEventListener(
         }
 
 
-        /*
-          IZQUIERDA:
-          abrir / siguiente página
-        */
+        /* IZQUIERDA = SIGUIENTE */
 
         if (diferenciaX < 0) {
 
@@ -122,11 +191,7 @@ libro.addEventListener(
 
         }
 
-
-        /*
-          DERECHA:
-          regresar
-        */
+        /* DERECHA = ANTERIOR */
 
         else {
 
@@ -148,7 +213,7 @@ libro.addEventListener(
 function siguientePagina() {
 
     /*
-       Primero se abre la portada.
+       0 = portada cerrada/visible
     */
 
     if (pagina === 0) {
@@ -156,31 +221,65 @@ function siguientePagina() {
         portada.style.transform =
             "rotateY(-180deg)";
 
-        pagina++;
+        pagina = 1;
+
+        actualizarOrden();
 
         return;
     }
 
 
     /*
-       Después se pasan las hojas.
+       Pasamos las hojas interiores
+       una por una.
     */
 
     const indice =
         pagina - 1;
 
+
     if (
-        indice >= hojas.length
+        indice < hojasInteriores.length
     ) {
+
+        hojasInteriores[indice]
+            .classList
+            .add("volteada");
+
+        pagina++;
+
+        actualizarOrden();
+
         return;
     }
 
 
-    hojas[indice]
-        .classList
-        .add("volteada");
+    /*
+       Cuando ya no quedan hojas interiores,
+       se muestra la contraportada.
 
-    pagina++;
+       La contraportada NO se voltea.
+       Simplemente pasa a ser la última cara.
+    */
+
+    if (
+        pagina ===
+        hojasInteriores.length + 1
+    ) {
+
+        if (contraportada) {
+
+            contraportada.classList
+                .add("mostrada");
+
+        }
+
+        pagina++;
+
+        actualizarOrden();
+
+        return;
+    }
 
 }
 
@@ -197,8 +296,62 @@ function paginaAnterior() {
 
 
     /*
-       Si estamos en la primera página,
-       volvemos a cerrar la portada.
+       Si estamos viendo la contraportada,
+       primero volvemos a la última hoja.
+    */
+
+    if (
+        pagina ===
+        hojasInteriores.length + 2
+    ) {
+
+        if (contraportada) {
+
+            contraportada.classList
+                .remove("mostrada");
+
+        }
+
+        pagina--;
+
+        actualizarOrden();
+
+        return;
+    }
+
+
+    /*
+       Retroceder una hoja interior.
+    */
+
+    if (
+        pagina >
+        1
+    ) {
+
+        const indice =
+            pagina - 2;
+
+        if (
+            hojasInteriores[indice]
+        ) {
+
+            hojasInteriores[indice]
+                .classList
+                .remove("volteada");
+
+        }
+
+        pagina--;
+
+        actualizarOrden();
+
+        return;
+    }
+
+
+    /*
+       Finalmente volvemos a la portada.
     */
 
     if (pagina === 1) {
@@ -206,100 +359,53 @@ function paginaAnterior() {
         portada.style.transform =
             "rotateY(0deg)";
 
-        pagina--;
+        pagina = 0;
+
+        actualizarOrden();
 
         return;
     }
-
-
-    /*
-       Regresar una hoja.
-    */
-
-    const indice =
-        pagina - 2;
-
-    if (
-        indice < 0
-    ) {
-        return;
-    }
-
-
-    hojas[indice]
-        .classList
-        .remove("volteada");
-
-    pagina--;
 
 }
 
 
 /* =================================
-   ARRASTRAR EL LIBRO
+   ACTUALIZAR ORDEN DE LAS HOJAS
 ================================= */
 
-let tocando = false;
+function actualizarOrden() {
 
-libro.addEventListener(
-    "touchmove",
-    function(e) {
+    /*
+       Las hojas ya volteadas deben quedar
+       detrás de las que todavía no se han
+       volteado.
+    */
 
-        if (!moviendo) return;
+    hojas.forEach(
+        (hoja, indice) => {
 
-        const toque =
-            e.touches[0];
+            hoja.style.zIndex =
+                hojas.length - indice + 1;
 
-        const desplazamiento =
-            toque.clientX - inicioX;
+        }
+    );
 
 
-        /*
-           Pequeña inclinación del libro
-           mientras se mueve el dedo.
-        */
+    /*
+       La contraportada siempre queda
+       al final del libro.
+    */
 
-        let inclinacion =
-            desplazamiento / 25;
+    if (contraportada) {
 
-        inclinacion =
-            Math.max(
-                -8,
-                Math.min(
-                    8,
-                    inclinacion
-                )
-            );
+        contraportada.style.zIndex = 1;
 
-        libro.style.transform =
-            `rotateX(2deg)
-             rotateY(${-2 + inclinacion}deg)`;
-
-    },
-    {
-        passive: true
     }
-);
+}
 
 
 /* =================================
-   VOLVER A POSICIÓN NORMAL
-================================= */
-
-libro.addEventListener(
-    "touchend",
-    function() {
-
-        libro.style.transform =
-            "rotateX(2deg) rotateY(-2deg)";
-
-    }
-);
-
-
-/* =================================
-   TAMBIÉN FUNCIONA CON MOUSE
-   PARA PROBAR EN COMPUTADORA
+   MOUSE PARA COMPUTADORA
 ================================= */
 
 let mouseInicio = 0;
@@ -350,3 +456,10 @@ document.addEventListener(
 
     }
 );
+
+
+/* =================================
+   POSICIÓN INICIAL
+================================= */
+
+actualizarOrden();
