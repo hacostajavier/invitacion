@@ -1,4 +1,3 @@
-javascript
 const libro = document.getElementById("libro");
 
 const paginas = Array.from(
