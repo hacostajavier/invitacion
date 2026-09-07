@@ -1,339 +1,375 @@
-/* =========================================
-   CONFIGURACIÓN GENERAL
-========================================= */
 
 * {
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+    margin: 0;
+    padding: 0;
 }
 
 html,
 body {
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 0;
+    overflow: hidden;
 }
 
 body {
     background:
         radial-gradient(
             circle at center,
-            #3b3b3b 0%,
-            #1f1f1f 55%,
-            #0d0d0d 100%
+            #62584d 0%,
+            #302c28 55%,
+            #171614 100%
         );
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    overflow: hidden;
-
-    font-family: Arial, sans-serif;
-
     touch-action: none;
+
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 
-/* =========================================
+/* =================================
    ESCENARIO
-========================================= */
+================================= */
 
 .escenario {
     width: 100vw;
     height: 100vh;
 
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     perspective: 1800px;
-
-    overflow: hidden;
 }
 
 
-/* =========================================
+/* =================================
    LIBRO
-========================================= */
+================================= */
 
 .libro {
     position: relative;
 
-    width: min(86vw, 430px);
-    height: min(78vh, 620px);
+    width: min(86vw, 420px);
+    height: min(78vh, 600px);
 
     transform-style: preserve-3d;
-
-    transform:
-        rotateX(1deg)
-        rotateY(0deg);
-
-    isolation: isolate;
-}
-
-
-/* =========================================
-   HOJAS
-========================================= */
-
-.hoja {
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: #f8f8f8;
-
-    border-radius: 3px 8px 8px 3px;
-
-    transform-style: preserve-3d;
-
-    transform-origin: left center;
-
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-
-    transition:
-        transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
-
-    overflow: hidden;
-
-    box-shadow:
-        0 12px 25px rgba(0, 0, 0, 0.35),
-        3px 0 5px rgba(0, 0, 0, 0.12);
-
-    cursor: grab;
-}
-
-.hoja:active {
-    cursor: grabbing;
-}
-
-
-/* =========================================
-   CARAS
-========================================= */
-
-.cara,
-.reverso {
-    position: absolute;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-
-    transform-style: preserve-3d;
-
-    overflow: hidden;
-}
-
-
-/* =========================================
-   IMÁGENES
-========================================= */
-
-.cara img {
-    display: block;
-
-    width: 100%;
-    height: 100%;
 
     /*
-       MUY IMPORTANTE:
-       La imagen siempre ocupa exactamente
-       el tamaño de la hoja.
+       Ligera inclinación para dar
+       sensación de objeto físico.
     */
+    transform:
+        rotateX(3deg)
+        rotateY(-3deg);
 
-    object-fit: cover;
+    transition:
+        transform .3s ease;
+}
 
-    object-position: center center;
 
-    margin: 0;
-    padding: 0;
+/* =================================
+   SOMBRA DEL LIBRO
+================================= */
 
-    user-select: none;
-    -webkit-user-drag: none;
+.libro::before {
+    content: "";
+
+    position: absolute;
+
+    width: 92%;
+    height: 25px;
+
+    left: 4%;
+    bottom: -25px;
+
+    background: rgba(0,0,0,.5);
+
+    filter: blur(18px);
+
+    border-radius: 50%;
+
+    transform:
+        translateZ(-50px);
 
     pointer-events: none;
 }
 
 
-/* =========================================
-   REVERSO DE LA HOJA
-========================================= */
+/* =================================
+   TAPAS
+================================= */
 
-.reverso {
-    background:
-        linear-gradient(
-            90deg,
-            #eeeeee 0%,
-            #fafafa 4%,
-            #ffffff 50%,
-            #f4f4f4 96%,
-            #dddddd 100%
-        );
+.tapa {
+    position: absolute;
 
-    transform: rotateY(180deg);
+    inset: 0;
+
+    border-radius:
+        5px 15px 15px 5px;
+
+    transform-style: preserve-3d;
+
+    overflow: hidden;
 }
 
 
-/* Papel limpio */
+/* =================================
+   PORTADA
+================================= */
 
-.papel-vacio {
+.portada {
+
+    z-index: 50;
+
+    transform-origin: left center;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,.25),
+            transparent 8%,
+            transparent 88%,
+            rgba(0,0,0,.25)
+        ),
+        #b9824c;
+
+    box-shadow:
+        8px 12px 30px rgba(0,0,0,.5),
+        inset 0 0 30px rgba(70,35,10,.25);
+
+    transition:
+        transform .9s
+        cubic-bezier(.2,.75,.2,1);
+}
+
+
+/*
+   Imagen de la portada
+*/
+
+.portada img {
+
     width: 100%;
     height: 100%;
 
+    object-fit: cover;
+
+    display: block;
+
+    pointer-events: none;
+}
+
+
+/*
+   Textura de cartón
+*/
+
+.textura {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .22;
+
+    background-image:
+
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(255,255,255,.15) 1px,
+            transparent 2px
+        ),
+
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            rgba(60,30,10,.12) 1px,
+            transparent 3px
+        );
+
+    mix-blend-mode: multiply;
+}
+
+
+/* =================================
+   CONTRAPORTADA
+================================= */
+
+.trasera {
+
     background:
         linear-gradient(
             90deg,
-            rgba(0, 0, 0, 0.04),
-            transparent 8%,
-            transparent 92%,
-            rgba(0, 0, 0, 0.04)
+            #754a28,
+            #a36b3d,
+            #704521
         );
+
+    box-shadow:
+        8px 10px 25px rgba(0,0,0,.45);
+
+    transform:
+        translateZ(-12px);
 }
 
 
-/* =========================================
-   HOJA VOLTEADA
-========================================= */
+/* =================================
+   HOJAS
+================================= */
+
+.hoja {
+
+    position: absolute;
+
+    inset: 5px;
+
+    background: #eee3ce;
+
+    transform-origin: left center;
+
+    transform-style: preserve-3d;
+
+    border-radius:
+        3px 10px 10px 3px;
+
+    box-shadow:
+        3px 3px 12px rgba(0,0,0,.25);
+
+    transition:
+        transform .9s
+        cubic-bezier(.2,.75,.2,1);
+
+    overflow: hidden;
+}
+
+
+/* =================================
+   IMAGEN DE CADA PÁGINA
+================================= */
+
+.cara,
+.reverso {
+
+    position: absolute;
+
+    inset: 0;
+
+    backface-visibility: hidden;
+
+    -webkit-backface-visibility: hidden;
+}
+
+
+.cara img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    pointer-events: none;
+}
+
+
+/* =================================
+   PARTE TRASERA DE LA HOJA
+================================= */
+
+.reverso {
+
+    background:
+        linear-gradient(
+            90deg,
+            #ddd0b8,
+            #f2e9d7,
+            #d7c8ad
+        );
+
+    transform:
+        rotateY(180deg);
+}
+
+
+/* =================================
+   PÁGINA GIRADA
+================================= */
 
 .hoja.volteada {
-    transform: rotateY(-180deg);
+
+    transform:
+        rotateY(-180deg);
 }
 
 
-/* =========================================
-   EFECTO DE BORDE DEL PAPEL
-========================================= */
+/* =================================
+   BORDE DE LAS HOJAS
+================================= */
 
 .hoja::after {
+
     content: "";
 
     position: absolute;
 
     top: 0;
     right: 0;
-    bottom: 0;
 
-    width: 5px;
+    width: 12px;
+    height: 100%;
 
     background:
         linear-gradient(
-            to right,
-            rgba(0,0,0,0.02),
-            rgba(0,0,0,0.10)
+            90deg,
+            transparent,
+            rgba(0,0,0,.13)
         );
 
     pointer-events: none;
-
-    z-index: 20;
 }
 
 
-/* =========================================
-   TEXTURA MUY SUTIL DE PAPEL
-========================================= */
-
-.hoja::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    pointer-events: none;
-
-    z-index: 30;
-
-    opacity: 0.08;
-
-    background-image:
-        repeating-linear-gradient(
-            0deg,
-            rgba(0,0,0,0.025) 0px,
-            rgba(0,0,0,0.025) 1px,
-            transparent 1px,
-            transparent 4px
-        );
-}
-
-
-/* =========================================
-   PORTADA
-========================================= */
-
-.portada {
-    z-index: 50;
-}
-
-
-/* =========================================
-   CONTRAPORTADA
-========================================= */
-
-.contraportada {
-    z-index: 10;
-}
-
-
-/* =========================================
-   EFECTO AL PASAR LAS HOJAS
-========================================= */
-
-.hoja.volteada {
-    box-shadow:
-        -8px 10px 22px rgba(0, 0, 0, 0.22),
-        -2px 0 5px rgba(0, 0, 0, 0.10);
-}
-
-
-/* =========================================
-   DISPOSITIVOS PEQUEÑOS
-========================================= */
+/* =================================
+   CELULAR
+================================= */
 
 @media (max-width: 600px) {
 
     .libro {
-        width: min(88vw, 400px);
-        height: min(82vh, 600px);
+
+        width: 88vw;
+
+        height: 76vh;
+
+        max-height: 620px;
+
+        transform:
+            rotateX(2deg)
+            rotateY(-2deg);
     }
 
 }
 
 
-/* =========================================
-   PANTALLAS MUY PEQUEÑAS
-========================================= */
+/* =================================
+   CELULARES PEQUEÑOS
+================================= */
 
-@media (max-width: 380px) {
-
-    .libro {
-        width: 90vw;
-        height: 80vh;
-    }
-
-}
-
-
-/* =========================================
-   PANTALLAS HORIZONTALES
-========================================= */
-
-@media (max-height: 500px) {
+@media (max-height: 650px) {
 
     .libro {
-        width: min(55vw, 400px);
-        height: 88vh;
+
+        height: 74vh;
     }
 
 }
