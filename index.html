@@ -2,7 +2,12 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
 
     <title>Invitación</title>
 
@@ -15,68 +20,57 @@
 
         <div class="libro" id="libro">
 
-            <!-- PORTADA -->
-            <div class="hoja portada" id="portada">
+            <!-- CONTRAPORTADA -->
+            <div class="tapa trasera"></div>
+
+
+            <!-- PÁGINA 3 -->
+            <div class="hoja" data-pagina="3">
                 <div class="cara">
-                    <img src="imagenes/portada.jpg" alt="Portada">
+                    <img src="imagenes/pagina3.jpg"
+                         alt="Invitación">
                 </div>
 
-                <div class="reverso">
-                    <div class="papel-vacio"></div>
-                </div>
-            </div>
-
-
-            <!-- PÁGINA 1 -->
-            <div class="hoja pagina" data-pagina="1">
-                <div class="cara">
-                    <img src="imagenes/pagina1.jpg" alt="Página 1">
-                </div>
-
-                <div class="reverso">
-                    <div class="papel-vacio"></div>
-                </div>
+                <div class="reverso"></div>
             </div>
 
 
             <!-- PÁGINA 2 -->
-            <div class="hoja pagina" data-pagina="2">
+            <div class="hoja" data-pagina="2">
                 <div class="cara">
-                    <img src="imagenes/pagina2.jpg" alt="Página 2">
+                    <img src="imagenes/pagina2.jpg"
+                         alt="Invitación">
                 </div>
 
-                <div class="reverso">
-                    <div class="papel-vacio"></div>
-                </div>
+                <div class="reverso"></div>
             </div>
 
 
-            <!-- PÁGINA 3 -->
-            <div class="hoja pagina" data-pagina="3">
+            <!-- PÁGINA 1 -->
+            <div class="hoja" data-pagina="1">
                 <div class="cara">
-                    <img src="imagenes/pagina3.jpg" alt="Página 3">
+                    <img src="imagenes/pagina1.jpg"
+                         alt="Invitación">
                 </div>
 
-                <div class="reverso">
-                    <div class="papel-vacio"></div>
-                </div>
+                <div class="reverso"></div>
             </div>
 
 
-            <!-- CONTRAPORTADA -->
-            <div class="hoja contraportada">
-                <div class="cara">
-                    <img src="imagenes/contraportada.jpg" alt="Contraportada">
-                </div>
+            <!-- PORTADA -->
+            <div class="tapa portada" id="portada">
 
-                <div class="reverso">
-                    <div class="papel-vacio"></div>
-                </div>
+                <img src="imagenes/portada.jpg"
+                     alt="Invitación">
+
+                <div class="textura"></div>
+
             </div>
 
         </div>
 
     </div>
+
 
     <script src="libro.js"></script>
 
