@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
 
@@ -20,9 +21,9 @@
 
         <div class="libro" id="libro">
 
-            <!-- =========================
+            <!-- =================================
                  PÁGINA 3
-            ========================== -->
+            ================================== -->
             <div class="hoja" data-pagina="3">
 
                 <div class="cara">
@@ -35,9 +36,9 @@
             </div>
 
 
-            <!-- =========================
+            <!-- =================================
                  PÁGINA 2
-            ========================== -->
+            ================================== -->
             <div class="hoja" data-pagina="2">
 
                 <div class="cara">
@@ -50,9 +51,9 @@
             </div>
 
 
-            <!-- =========================
+            <!-- =================================
                  PÁGINA 1
-            ========================== -->
+            ================================== -->
             <div class="hoja" data-pagina="1">
 
                 <div class="cara">
@@ -65,9 +66,9 @@
             </div>
 
 
-            <!-- =========================
+            <!-- =================================
                  PORTADA
-            ========================== -->
+            ================================== -->
             <div class="tapa portada" id="portada">
 
                 <img src="imagenes/portada.jpg"
@@ -82,13 +83,31 @@
     </div>
 
 
-    <!-- =========================
-         SONIDO DE PASAR HOJA
-    ========================== -->
+    <!-- =================================
+         SONIDO
+    ================================== -->
 
     <audio id="sonidoHoja" preload="auto">
-        <source src="sonidos/pasar-hoja.mp3" type="audio/mpeg">
+        <source src="sonidos/pasar-hoja.mp3"
+                type="audio/mpeg">
     </audio>
+
+
+    <!-- =================================
+         SEÑAL PARA DESLIZAR
+    ================================== -->
+
+    <div class="señal-deslizar" id="señalDeslizar">
+
+        <span class="mano">☝️</span>
+
+        <span class="flecha">←</span>
+
+        <span class="texto-deslizar">
+            Desliza para continuar
+        </span>
+
+    </div>
 
 
     <script src="libro.js"></script>
