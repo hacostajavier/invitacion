@@ -1,13 +1,15 @@
-const libro = document.getElementById("libro");
+const libro =
+    document.getElementById("libro");
 
-const portada = document.getElementById("portada");
+const portada =
+    document.getElementById("portada");
 
 const sonidoHoja =
     document.getElementById("sonidoHoja");
 
 
 // ========================================
-// OBTENER HOJAS
+// OBTENER LAS HOJAS
 // ========================================
 
 const hojas = Array.from(
@@ -34,14 +36,14 @@ hojas.forEach((hoja, indice) => {
 });
 
 
-// La portada queda por encima
+// La portada queda encima
 
 portada.style.zIndex =
     hojas.length + 10;
 
 
 // ========================================
-// SONIDO
+// REPRODUCIR SONIDO
 // ========================================
 
 function reproducirSonido() {
@@ -58,10 +60,12 @@ function reproducirSonido() {
     if (reproduccion !== undefined) {
 
         reproduccion.catch(() => {
-            // El navegador puede bloquear
-            // el audio hasta una interacción.
-        });
 
+            // El navegador puede bloquear
+            // el audio hasta que el usuario
+            // interactúe con la página.
+
+        });
     }
 }
 
@@ -72,9 +76,10 @@ function reproducirSonido() {
 
 function siguientePagina() {
 
-    // --------------------------------
+
+    // ====================================
     // PORTADA
-    // --------------------------------
+    // ====================================
 
     if (pagina === 0) {
 
@@ -89,11 +94,13 @@ function siguientePagina() {
     }
 
 
-    // --------------------------------
-    // PÁGINAS
-    // --------------------------------
+    // ====================================
+    // HOJAS
+    // ====================================
 
-    const indice = pagina - 1;
+    const indice =
+        pagina - 1;
+
 
     if (
         indice >= 0 &&
@@ -112,7 +119,7 @@ function siguientePagina() {
     }
 
 
-    // Ya está en la última página
+    // Llegó a la última página
 
     return;
 }
@@ -129,9 +136,9 @@ function paginaAnterior() {
     }
 
 
-    // --------------------------------
+    // ====================================
     // VOLVER A PORTADA
-    // --------------------------------
+    // ====================================
 
     if (pagina === 1) {
 
@@ -146,11 +153,13 @@ function paginaAnterior() {
     }
 
 
-    // --------------------------------
+    // ====================================
     // VOLVER UNA HOJA
-    // --------------------------------
+    // ====================================
 
-    const indice = pagina - 2;
+    const indice =
+        pagina - 2;
+
 
     if (
         indice >= 0 &&
@@ -214,11 +223,13 @@ libro.addEventListener(
         const toque =
             e.changedTouches[0];
 
+
         const finalX =
             toque.clientX;
 
         const finalY =
             toque.clientY;
+
 
         const diferenciaX =
             finalX - inicioX;
@@ -226,25 +237,27 @@ libro.addEventListener(
         const diferenciaY =
             finalY - inicioY;
 
+
         moviendo = false;
 
 
-        // Evitar interpretar
-        // desplazamientos verticales
+        // Ignorar desplazamientos verticales
 
         if (
             Math.abs(diferenciaX) <
             Math.abs(diferenciaY)
         ) {
+
             return;
         }
 
 
-        // Movimiento muy pequeño
+        // Ignorar movimientos pequeños
 
         if (
             Math.abs(diferenciaX) < 35
         ) {
+
             return;
         }
 
@@ -273,7 +286,7 @@ libro.addEventListener(
 
 
 // ========================================
-// MOVIMIENTO DEL LIBRO
+// EFECTO DEL MOVIMIENTO DEL LIBRO
 // ========================================
 
 libro.addEventListener(
@@ -284,14 +297,18 @@ libro.addEventListener(
             return;
         }
 
+
         const toque =
             e.touches[0];
+
 
         const desplazamiento =
             toque.clientX - inicioX;
 
+
         let inclinacion =
             desplazamiento / 25;
+
 
         inclinacion =
             Math.max(
@@ -301,6 +318,7 @@ libro.addEventListener(
                     inclinacion
                 )
             );
+
 
         libro.style.transform =
             `rotateX(2deg) rotateY(${-2 + inclinacion}deg)`;
@@ -353,22 +371,25 @@ document.addEventListener(
             return;
         }
 
+
         const diferencia =
             e.clientX - mouseInicio;
+
 
         mouseActivo = false;
 
 
-        // Ignorar movimiento pequeño
+        // Movimiento pequeño
 
         if (
             Math.abs(diferencia) < 40
         ) {
+
             return;
         }
 
 
-        // Arrastrar hacia izquierda
+        // Hacia izquierda
 
         if (diferencia < 0) {
 
@@ -376,7 +397,7 @@ document.addEventListener(
 
         }
 
-        // Arrastrar hacia derecha
+        // Hacia derecha
 
         else {
 
