@@ -17,6 +17,27 @@
 
 <body>
 
+    <!-- =================================
+         MENSAJE SUPERIOR
+    ================================== -->
+
+    <div class="señal-deslizar" id="señalDeslizar">
+
+        <span class="mano">☝️</span>
+
+        <span class="flecha">←</span>
+
+        <span class="texto-deslizar">
+            Desliza para continuar
+        </span>
+
+    </div>
+
+
+    <!-- =================================
+         ESCENARIO
+    ================================== -->
+
     <div class="escenario">
 
         <div class="libro" id="libro">
@@ -24,11 +45,14 @@
             <!-- =================================
                  PÁGINA 3
             ================================== -->
+
             <div class="hoja" data-pagina="3">
 
                 <div class="cara">
+
                     <img src="imagenes/pagina3.jpg"
                          alt="Página 3">
+
                 </div>
 
                 <div class="reverso"></div>
@@ -39,11 +63,14 @@
             <!-- =================================
                  PÁGINA 2
             ================================== -->
+
             <div class="hoja" data-pagina="2">
 
                 <div class="cara">
+
                     <img src="imagenes/pagina2.jpg"
                          alt="Página 2">
+
                 </div>
 
                 <div class="reverso"></div>
@@ -54,11 +81,14 @@
             <!-- =================================
                  PÁGINA 1
             ================================== -->
+
             <div class="hoja" data-pagina="1">
 
                 <div class="cara">
+
                     <img src="imagenes/pagina1.jpg"
                          alt="Página 1">
+
                 </div>
 
                 <div class="reverso"></div>
@@ -69,6 +99,7 @@
             <!-- =================================
                  PORTADA
             ================================== -->
+
             <div class="tapa portada" id="portada">
 
                 <img src="imagenes/portada.jpg"
@@ -84,30 +115,15 @@
 
 
     <!-- =================================
-         SONIDO
+         SONIDO DE PASAR HOJA
     ================================== -->
 
     <audio id="sonidoHoja" preload="auto">
+
         <source src="sonidos/pasar-hoja.mp3"
                 type="audio/mpeg">
+
     </audio>
-
-
-    <!-- =================================
-         SEÑAL PARA DESLIZAR
-    ================================== -->
-
-    <div class="señal-deslizar" id="señalDeslizar">
-
-        <span class="mano">☝️</span>
-
-        <span class="flecha">←</span>
-
-        <span class="texto-deslizar">
-            Desliza para continuar
-        </span>
-
-    </div>
 
 
     <script src="libro.js"></script>
