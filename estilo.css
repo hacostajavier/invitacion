@@ -74,7 +74,7 @@ body {
 
 
 /* =========================================
-   TAPAS
+   TAPA
 ========================================= */
 
 .tapa {
@@ -176,7 +176,7 @@ body {
 
 
 /* =========================================
-   CARA
+   CARA DE LA HOJA
 ========================================= */
 
 .cara {
@@ -190,7 +190,7 @@ body {
 
     overflow: hidden;
 
-    background: white;
+    background: #fff;
 
     backface-visibility: hidden;
 
@@ -199,7 +199,7 @@ body {
 
 
 /* =========================================
-   IMÁGENES DE LAS PÁGINAS
+   IMÁGENES
 ========================================= */
 
 .cara img {
@@ -229,7 +229,7 @@ body {
     width: 100%;
     height: 100%;
 
-    background: white;
+    background: #fff;
 
     transform: rotateY(180deg);
 
@@ -251,7 +251,7 @@ body {
 
 
 /* =========================================
-   BORDE DE PAPEL
+   BORDE DEL PAPEL
 ========================================= */
 
 .hoja::before {
@@ -307,20 +307,171 @@ body {
 
 
 /* =========================================
-   TABLETS
+   SEÑAL PARA DESLIZAR
+========================================= */
+
+.señal-deslizar {
+    position: fixed;
+
+    left: 50%;
+    bottom: 25px;
+
+    transform: translateX(-50%);
+
+    z-index: 1000;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 18px;
+
+    border-radius: 30px;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    color: white;
+
+    font-size: 15px;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+
+    animation:
+        aparecerSeñal 0.8s ease,
+        moverSeñal 1.5s ease-in-out infinite;
+}
+
+
+/* =========================================
+   MANO
+========================================= */
+
+.señal-deslizar .mano {
+    font-size: 22px;
+
+    animation:
+        moverMano 1.2s ease-in-out infinite;
+}
+
+
+/* =========================================
+   FLECHA
+========================================= */
+
+.señal-deslizar .flecha {
+    font-size: 25px;
+
+    font-weight: bold;
+
+    animation:
+        moverFlecha 1.2s ease-in-out infinite;
+}
+
+
+/* =========================================
+   TEXTO
+========================================= */
+
+.señal-deslizar .texto-deslizar {
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   ANIMACIÓN DE APARICIÓN
+========================================= */
+
+@keyframes aparecerSeñal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(-50%)
+            translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateX(-50%)
+            translateY(0);
+    }
+}
+
+
+/* =========================================
+   ANIMACIÓN DE FLECHA
+========================================= */
+
+@keyframes moverFlecha {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-12px);
+    }
+}
+
+
+/* =========================================
+   ANIMACIÓN DE MANO
+========================================= */
+
+@keyframes moverMano {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-8px);
+    }
+}
+
+
+/* =========================================
+   ANIMACIÓN DE SEÑAL
+========================================= */
+
+@keyframes moverSeñal {
+
+    0%,
+    100% {
+        opacity: 0.75;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+
+/* =========================================
+   TABLET
 ========================================= */
 
 @media (max-width: 900px) {
 
     .libro {
         width: 88vw;
+
         height: 88vh;
     }
 }
 
 
 /* =========================================
-   CELULARES
+   CELULAR
 ========================================= */
 
 @media (max-width: 600px) {
@@ -331,33 +482,52 @@ body {
 
     .libro {
         width: 92vw;
+
         height: 88vh;
 
         transform:
             rotateX(1deg)
             rotateY(-1deg);
     }
+
+    .señal-deslizar {
+        bottom: 18px;
+
+        padding: 9px 15px;
+
+        font-size: 13px;
+    }
+
+    .señal-deslizar .mano {
+        font-size: 19px;
+    }
+
+    .señal-deslizar .flecha {
+        font-size: 22px;
+    }
 }
 
 
 /* =========================================
-   CELULARES PEQUEÑOS
+   CELULAR PEQUEÑO
 ========================================= */
 
 @media (max-width: 400px) {
 
     .libro {
         width: 94vw;
+
         height: 86vh;
     }
 }
 
 
 /* =========================================
-   MODO HORIZONTAL
+   PANTALLA HORIZONTAL
 ========================================= */
 
-@media (orientation: landscape) and (max-height: 600px) {
+@media (orientation: landscape)
+       and (max-height: 600px) {
 
     .libro {
         width: auto;
