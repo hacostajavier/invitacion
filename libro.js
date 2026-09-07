@@ -1,391 +1,352 @@
-/* =========================================
-   LIBRO DIGITAL - INVITACIÓN
-========================================= */
+const libro = document.getElementById("libro");
 
-document.addEventListener("DOMContentLoaded", () => {
+const portada = document.getElementById("portada");
 
-    const libro = document.getElementById("libro");
+const hojas = Array.from(
+    document.querySelectorAll(".hoja")
+);
 
-    const portada = document.getElementById("portada");
+let pagina = 0;
 
-    const paginas = Array.from(
-        document.querySelectorAll(".pagina")
-    );
 
-    const contraportada =
-        document.querySelector(".contraportada");
+/* =================================
+   ORDEN DE LAS HOJAS
+================================= */
+
+hojas.forEach((hoja, indice) => {
+
+    hoja.style.zIndex =
+        hojas.length - indice + 1;
+
+});
+
+
+/* =================================
+   VARIABLES DEL MOVIMIENTO
+================================= */
+
+let inicioX = 0;
+let inicioY = 0;
+
+let moviendo = false;
+
+let ultimaDireccion = 0;
+
+
+/* =================================
+   INICIO DEL TOQUE
+================================= */
+
+libro.addEventListener(
+    "touchstart",
+    function(e) {
+
+        const toque =
+            e.touches[0];
+
+        inicioX =
+            toque.clientX;
+
+        inicioY =
+            toque.clientY;
+
+        moviendo = true;
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* =================================
+   FINAL DEL TOQUE
+================================= */
+
+libro.addEventListener(
+    "touchend",
+    function(e) {
+
+        if (!moviendo) return;
+
+        const toque =
+            e.changedTouches[0];
+
+        const finalX =
+            toque.clientX;
+
+        const finalY =
+            toque.clientY;
+
+        const diferenciaX =
+            finalX - inicioX;
+
+        const diferenciaY =
+            finalY - inicioY;
+
+        moviendo = false;
+
+
+        /*
+          Si el movimiento es principalmente
+          vertical, no pasamos página.
+        */
+
+        if (
+            Math.abs(diferenciaX) <
+            Math.abs(diferenciaY)
+        ) {
+            return;
+        }
+
+
+        /*
+          Distancia mínima.
+        */
+
+        if (
+            Math.abs(diferenciaX) < 35
+        ) {
+            return;
+        }
+
+
+        /*
+          IZQUIERDA:
+          abrir / siguiente página
+        */
+
+        if (diferenciaX < 0) {
+
+            siguientePagina();
+
+        }
+
+
+        /*
+          DERECHA:
+          regresar
+        */
+
+        else {
+
+            paginaAnterior();
+
+        }
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* =================================
+   SIGUIENTE PÁGINA
+================================= */
+
+function siguientePagina() {
+
+    /*
+       Primero se abre la portada.
+    */
+
+    if (pagina === 0) {
+
+        portada.style.transform =
+            "rotateY(-180deg)";
+
+        pagina++;
+
+        return;
+    }
 
 
     /*
-       ORDEN REAL DEL LIBRO:
-
-       0 = PORTADA
-       1 = PÁGINA 1
-       2 = PÁGINA 2
-       3 = PÁGINA 3
-       4 = CONTRAPORTADA
+       Después se pasan las hojas.
     */
 
-    const hojas = [
-        portada,
-        ...paginas,
-        contraportada
-    ];
+    const indice =
+        pagina - 1;
 
-
-    let paginaActual = 0;
-
-    const totalHojas = hojas.length;
-
-
-    /* =========================================
-       Z-INDEX INICIAL
-    ========================================= */
-
-    function organizarCapas() {
-
-        hojas.forEach((hoja, indice) => {
-
-            hoja.style.zIndex =
-                totalHojas - indice;
-
-        });
-
+    if (
+        indice >= hojas.length
+    ) {
+        return;
     }
 
-    organizarCapas();
+
+    hojas[indice]
+        .classList
+        .add("volteada");
+
+    pagina++;
+
+}
 
 
-    /* =========================================
-       PASAR A LA SIGUIENTE HOJA
-    ========================================= */
+/* =================================
+   PÁGINA ANTERIOR
+================================= */
 
-    function siguientePagina() {
+function paginaAnterior() {
 
-        if (paginaActual >= totalHojas - 1) {
+    if (pagina <= 0) {
+        return;
+    }
+
+
+    /*
+       Si estamos en la primera página,
+       volvemos a cerrar la portada.
+    */
+
+    if (pagina === 1) {
+
+        portada.style.transform =
+            "rotateY(0deg)";
+
+        pagina--;
+
+        return;
+    }
+
+
+    /*
+       Regresar una hoja.
+    */
+
+    const indice =
+        pagina - 2;
+
+    if (
+        indice < 0
+    ) {
+        return;
+    }
+
+
+    hojas[indice]
+        .classList
+        .remove("volteada");
+
+    pagina--;
+
+}
+
+
+/* =================================
+   ARRASTRAR EL LIBRO
+================================= */
+
+let tocando = false;
+
+libro.addEventListener(
+    "touchmove",
+    function(e) {
+
+        if (!moviendo) return;
+
+        const toque =
+            e.touches[0];
+
+        const desplazamiento =
+            toque.clientX - inicioX;
+
+
+        /*
+           Pequeña inclinación del libro
+           mientras se mueve el dedo.
+        */
+
+        let inclinacion =
+            desplazamiento / 25;
+
+        inclinacion =
+            Math.max(
+                -8,
+                Math.min(
+                    8,
+                    inclinacion
+                )
+            );
+
+        libro.style.transform =
+            `rotateX(2deg)
+             rotateY(${-2 + inclinacion}deg)`;
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* =================================
+   VOLVER A POSICIÓN NORMAL
+================================= */
+
+libro.addEventListener(
+    "touchend",
+    function() {
+
+        libro.style.transform =
+            "rotateX(2deg) rotateY(-2deg)";
+
+    }
+);
+
+
+/* =================================
+   TAMBIÉN FUNCIONA CON MOUSE
+   PARA PROBAR EN COMPUTADORA
+================================= */
+
+let mouseInicio = 0;
+let mouseActivo = false;
+
+
+libro.addEventListener(
+    "mousedown",
+    function(e) {
+
+        mouseInicio =
+            e.clientX;
+
+        mouseActivo = true;
+
+    }
+);
+
+
+document.addEventListener(
+    "mouseup",
+    function(e) {
+
+        if (!mouseActivo) return;
+
+        const diferencia =
+            e.clientX - mouseInicio;
+
+        mouseActivo = false;
+
+
+        if (
+            Math.abs(diferencia) < 40
+        ) {
             return;
         }
 
-        const hoja = hojas[paginaActual];
 
-        hoja.classList.add("volteada");
+        if (diferencia < 0) {
 
-        /*
-           Esperamos un poco antes de bajar
-           la hoja para que la animación
-           termine correctamente.
-        */
+            siguientePagina();
 
-        setTimeout(() => {
+        } else {
 
-            hoja.style.zIndex =
-                paginaActual + 1;
+            paginaAnterior();
 
-        }, 500);
-
-
-        paginaActual++;
+        }
 
     }
-
-
-    /* =========================================
-       VOLVER A LA HOJA ANTERIOR
-    ========================================= */
-
-    function paginaAnterior() {
-
-        if (paginaActual <= 0) {
-            return;
-        }
-
-        paginaActual--;
-
-        const hoja = hojas[paginaActual];
-
-        /*
-           La ponemos arriba antes de
-           quitar la rotación.
-        */
-
-        hoja.style.zIndex = 50 + paginaActual;
-
-        hoja.classList.remove("volteada");
-
-    }
-
-
-    /* =========================================
-       CONTROL DE TOUCH
-    ========================================= */
-
-    let inicioX = 0;
-    let inicioY = 0;
-
-    let moviendo = false;
-
-
-    document.addEventListener(
-        "touchstart",
-        (evento) => {
-
-            if (!evento.touches.length) {
-                return;
-            }
-
-            inicioX =
-                evento.touches[0].clientX;
-
-            inicioY =
-                evento.touches[0].clientY;
-
-            moviendo = true;
-
-        },
-        { passive: true }
-    );
-
-
-    document.addEventListener(
-        "touchmove",
-        (evento) => {
-
-            if (!moviendo) {
-                return;
-            }
-
-            if (!evento.touches.length) {
-                return;
-            }
-
-            const actualX =
-                evento.touches[0].clientX;
-
-            const actualY =
-                evento.touches[0].clientY;
-
-            const diferenciaX =
-                actualX - inicioX;
-
-            const diferenciaY =
-                actualY - inicioY;
-
-
-            /*
-               Solo consideramos el gesto
-               si es principalmente horizontal.
-            */
-
-            if (
-                Math.abs(diferenciaX) >
-                Math.abs(diferenciaY)
-            ) {
-
-                evento.preventDefault();
-
-            }
-
-        },
-        { passive: false }
-    );
-
-
-    document.addEventListener(
-        "touchend",
-        (evento) => {
-
-            if (!moviendo) {
-                return;
-            }
-
-            moviendo = false;
-
-            const finalX =
-                evento.changedTouches[0].clientX;
-
-            const finalY =
-                evento.changedTouches[0].clientY;
-
-            const diferenciaX =
-                finalX - inicioX;
-
-            const diferenciaY =
-                finalY - inicioY;
-
-
-            /*
-               Distancia mínima necesaria
-               para reconocer el deslizamiento.
-            */
-
-            const distanciaMinima = 45;
-
-
-            /*
-               Evitamos que un movimiento
-               vertical cambie de página.
-            */
-
-            if (
-                Math.abs(diferenciaX) <
-                Math.abs(diferenciaY)
-            ) {
-                return;
-            }
-
-
-            if (
-                Math.abs(diferenciaX) <
-                distanciaMinima
-            ) {
-                return;
-            }
-
-
-            /*
-               DESLIZAR HACIA LA IZQUIERDA
-               = SIGUIENTE
-            */
-
-            if (diferenciaX < 0) {
-
-                siguientePagina();
-
-            }
-
-
-            /*
-               DESLIZAR HACIA LA DERECHA
-               = ANTERIOR
-            */
-
-            else {
-
-                paginaAnterior();
-
-            }
-
-        },
-        { passive: true }
-    );
-
-
-    /* =========================================
-       CONTROL CON MOUSE
-    ========================================= */
-
-    let mouseInicioX = 0;
-    let mousePresionado = false;
-
-
-    libro.addEventListener(
-        "mousedown",
-        (evento) => {
-
-            mousePresionado = true;
-
-            mouseInicioX = evento.clientX;
-
-        }
-    );
-
-
-    document.addEventListener(
-        "mouseup",
-        (evento) => {
-
-            if (!mousePresionado) {
-                return;
-            }
-
-            mousePresionado = false;
-
-            const diferencia =
-                evento.clientX - mouseInicioX;
-
-
-            if (Math.abs(diferencia) < 45) {
-                return;
-            }
-
-
-            if (diferencia < 0) {
-
-                siguientePagina();
-
-            } else {
-
-                paginaAnterior();
-
-            }
-
-        }
-    );
-
-
-    /* =========================================
-       TECLADO
-    ========================================= */
-
-    document.addEventListener(
-        "keydown",
-        (evento) => {
-
-            if (
-                evento.key === "ArrowLeft" ||
-                evento.key === " "
-            ) {
-
-                siguientePagina();
-
-            }
-
-
-            if (
-                evento.key === "ArrowRight"
-            ) {
-
-                paginaAnterior();
-
-            }
-
-        }
-    );
-
-
-    /* =========================================
-       EVITAR MENÚ CONTEXTUAL
-    ========================================= */
-
-    libro.addEventListener(
-        "contextmenu",
-        (evento) => {
-
-            evento.preventDefault();
-
-        }
-    );
-
-
-    /* =========================================
-       EVITAR ARRASTRAR IMÁGENES
-    ========================================= */
-
-    const imagenes =
-        document.querySelectorAll("img");
-
-    imagenes.forEach((imagen) => {
-
-        imagen.addEventListener(
-            "dragstart",
-            (evento) => {
-
-                evento.preventDefault();
-
-            }
-        );
-
-    });
-
-
-});
+);
