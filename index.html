@@ -1,126 +1,101 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
+    <meta charset="UTF-8">
 
-```
-<meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
 
-<meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+    <title>Invitación</title>
 
-<title>Invitación</title>
-
-<link rel="stylesheet" href="estilo.css">
-```
-
+    <link rel="stylesheet" href="estilo.css">
 </head>
 
 <body>
 
-```
-<div class="escenario">
+    <div class="escenario">
 
-    <div class="libro" id="libro">
+        <div class="libro" id="libro">
 
+            <!-- =========================
+                 CONTRAPORTADA
+            ========================== -->
+            <div class="tapa trasera contraportada" id="contraportada">
 
-        <!-- =================================
-             PORTADA
-        ================================== -->
+                <img src="imagenes/contraportada.jpg"
+                     alt="Contraportada">
 
-        <div class="tapa portada"
-             id="portada">
-
-            <img src="imagenes/portada.jpg"
-                 alt="Invitación">
-
-            <div class="textura"></div>
-
-        </div>
-
-
-        <!-- =================================
-             PÁGINA 1
-        ================================== -->
-
-        <div class="hoja"
-             data-pagina="1">
-
-            <div class="cara">
-
-                <img src="imagenes/pagina1.jpg"
-                     alt="Invitación">
+                <div class="textura"></div>
 
             </div>
 
-            <div class="reverso"></div>
 
-        </div>
+            <!-- =========================
+                 PÁGINA 3
+            ========================== -->
+            <div class="hoja" data-pagina="3">
 
+                <div class="cara">
+                    <img src="imagenes/pagina3.jpg"
+                         alt="Página 3">
+                </div>
 
-        <!-- =================================
-             PÁGINA 2
-        ================================== -->
-
-        <div class="hoja"
-             data-pagina="2">
-
-            <div class="cara">
-
-                <img src="imagenes/pagina2.jpg"
-                     alt="Invitación">
+                <div class="reverso"></div>
 
             </div>
 
-            <div class="reverso"></div>
 
-        </div>
+            <!-- =========================
+                 PÁGINA 2
+            ========================== -->
+            <div class="hoja" data-pagina="2">
 
+                <div class="cara">
+                    <img src="imagenes/pagina2.jpg"
+                         alt="Página 2">
+                </div>
 
-        <!-- =================================
-             PÁGINA 3
-        ================================== -->
-
-        <div class="hoja"
-             data-pagina="3">
-
-            <div class="cara">
-
-                <img src="imagenes/pagina3.jpg"
-                     alt="Invitación">
+                <div class="reverso"></div>
 
             </div>
 
-            <div class="reverso"></div>
+
+            <!-- =========================
+                 PÁGINA 1
+            ========================== -->
+            <div class="hoja" data-pagina="1">
+
+                <div class="cara">
+                    <img src="imagenes/pagina1.jpg"
+                         alt="Página 1">
+                </div>
+
+                <div class="reverso"></div>
+
+            </div>
+
+
+            <!-- =========================
+                 PORTADA
+            ========================== -->
+            <div class="tapa portada" id="portada">
+
+                <img src="imagenes/portada.jpg"
+                     alt="Portada">
+
+                <div class="textura"></div>
+
+            </div>
 
         </div>
-
-
-        <!-- =================================
-             CONTRAPORTADA
-             SIEMPRE ES LA ÚLTIMA
-        ================================== -->
-
-        <div class="tapa trasera contraportada"
-             id="contraportada">
-
-            <div class="textura"></div>
-
-        </div>
-
 
     </div>
 
-</div>
 
-
-<script src="libro.js"></script>
-```
+    <script src="libro.js"></script>
 
 </body>
-
 </html>
