@@ -1,32 +1,30 @@
 javascript
-const libro =
-    document.getElementById("libro");
+const libro = document.getElementById("libro");
 
-const portada =
-    document.getElementById("portada");
+const paginas = Array.from(
+    document.querySelectorAll(".hoja")
+);
 
-const hojas =
-    Array.from(
-        document.querySelectorAll(
-            ".hoja:not(.portada):not(.contraportada)"
-        )
-    );
+let paginaActual = 0;
 
-let pagina = 0;
+const totalPaginas = paginas.length;
 
 
 /* =========================================
-   ORDEN DE LAS HOJAS
+   ORDEN CORRECTO DE LAS HOJAS
 ========================================= */
 
-hojas.forEach(
-    (hoja, indice) => {
+paginas.forEach((pagina, indice) => {
 
-        hoja.style.zIndex =
-            hojas.length - indice + 1;
+    /*
+       La portada queda arriba.
+       Las siguientes hojas quedan debajo.
+    */
 
-    }
-);
+    pagina.style.zIndex =
+        totalPaginas - indice;
+
+});
 
 
 /* =========================================
@@ -36,7 +34,7 @@ hojas.forEach(
 let inicioX = 0;
 let inicioY = 0;
 
-let moviendo = false;
+let tocando = false;
 
 
 /* =========================================
@@ -47,65 +45,12 @@ libro.addEventListener(
     "touchstart",
     function(evento) {
 
-        const toque =
-            evento.touches[0];
+        const toque = evento.touches[0];
 
-        inicioX =
-            toque.clientX;
+        inicioX = toque.clientX;
+        inicioY = toque.clientY;
 
-        inicioY =
-            toque.clientY;
-
-        moviendo = true;
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* =========================================
-   MOVIMIENTO DEL DEDO
-========================================= */
-
-libro.addEventListener(
-    "touchmove",
-    function(evento) {
-
-        if (!moviendo) {
-            return;
-        }
-
-        const toque =
-            evento.touches[0];
-
-        const desplazamiento =
-            toque.clientX - inicioX;
-
-
-        /*
-           Pequeña inclinación del libro
-           mientras arrastras.
-        */
-
-        let inclinacion =
-            desplazamiento / 30;
-
-
-        inclinacion =
-            Math.max(
-                -7,
-                Math.min(
-                    7,
-                    inclinacion
-                )
-            );
-
-
-        libro.style.transform =
-            `rotateX(2deg)
-             rotateY(${-2 + inclinacion}deg)`;
+        tocando = true;
 
     },
     {
@@ -122,7 +67,7 @@ libro.addEventListener(
     "touchend",
     function(evento) {
 
-        if (!moviendo) {
+        if (!tocando) {
             return;
         }
 
@@ -135,32 +80,22 @@ libro.addEventListener(
         const finalY =
             toque.clientY;
 
-
-        const diferenciaX =
+        const movimientoX =
             finalX - inicioX;
 
-        const diferenciaY =
+        const movimientoY =
             finalY - inicioY;
 
-
-        moviendo = false;
-
-
-        /*
-           Volver el libro a su posición.
-        */
-
-        libro.style.transform =
-            "rotateX(2deg) rotateY(-2deg)";
+        tocando = false;
 
 
         /*
-           Ignorar movimientos verticales.
+           Ignorar movimiento vertical.
         */
 
         if (
-            Math.abs(diferenciaX) <
-            Math.abs(diferenciaY)
+            Math.abs(movimientoY) >
+            Math.abs(movimientoX)
         ) {
             return;
         }
@@ -171,19 +106,18 @@ libro.addEventListener(
         */
 
         if (
-            Math.abs(diferenciaX) < 40
+            Math.abs(movimientoX) < 40
         ) {
             return;
         }
 
 
         /*
-           DESLIZAR A LA IZQUIERDA
+           Deslizar hacia la izquierda:
+           siguiente hoja.
         */
 
-        if (
-            diferenciaX < 0
-        ) {
+        if (movimientoX < 0) {
 
             siguientePagina();
 
@@ -191,7 +125,8 @@ libro.addEventListener(
 
 
         /*
-           DESLIZAR A LA DERECHA
+           Deslizar hacia la derecha:
+           hoja anterior.
         */
 
         else {
@@ -208,102 +143,78 @@ libro.addEventListener(
 
 
 /* =========================================
-   SIGUIENTE PÁGINA
+   SIGUIENTE HOJA
 ========================================= */
 
 function siguientePagina() {
 
-
-    /*
-       Primero abrimos la portada.
-    */
-
-    if (pagina === 0) {
-
-        portada.classList.add(
-            "volteada"
-        );
-
-        pagina++;
-
-        return;
-    }
-
-
-    /*
-       Luego pasamos las páginas.
-    */
-
-    const indice =
-        pagina - 1;
-
-
     if (
-        indice >= hojas.length
+        paginaActual >=
+        totalPaginas - 1
     ) {
         return;
     }
 
 
-    hojas[indice]
-        .classList
-        .add("volteada");
+    const hoja =
+        paginas[paginaActual];
 
 
-    pagina++;
+    hoja.classList.add(
+        "volteada"
+    );
+
+
+    /*
+       Después de girar, bajamos
+       su capa para que la siguiente
+       hoja quede disponible.
+    */
+
+    setTimeout(() => {
+
+        hoja.style.zIndex = paginaActual + 1;
+
+    }, 450);
+
+
+    paginaActual++;
 
 }
 
 
 /* =========================================
-   PÁGINA ANTERIOR
+   HOJA ANTERIOR
 ========================================= */
 
 function paginaAnterior() {
 
-    if (pagina <= 0) {
-        return;
-    }
-
-
-    /*
-       Si estamos viendo la primera
-       página, cerramos la portada.
-    */
-
-    if (pagina === 1) {
-
-        portada.classList.remove(
-            "volteada"
-        );
-
-        pagina--;
-
-        return;
-    }
-
-
-    /*
-       Regresar una página.
-    */
-
-    const indice =
-        pagina - 2;
-
-
     if (
-        indice < 0
+        paginaActual <= 0
     ) {
         return;
     }
 
 
-    hojas[indice]
-        .classList
-        .remove("volteada");
+    paginaActual--;
 
 
-    pagina--;
+    const hoja =
+        paginas[paginaActual];
+
+
+    /*
+       Volvemos a subir la hoja
+       antes de devolverla.
+    */
+
+    hoja.style.zIndex =
+        totalPaginas + 10;
+
+
+    hoja.classList.remove(
+        "volteada"
+    );
 
 }
 
@@ -338,7 +249,7 @@ document.addEventListener(
             return;
         }
 
-        const diferencia =
+        const movimiento =
             evento.clientX -
             mouseInicioX;
 
@@ -346,13 +257,13 @@ document.addEventListener(
 
 
         if (
-            Math.abs(diferencia) < 40
+            Math.abs(movimiento) < 40
         ) {
             return;
         }
 
 
-        if (diferencia < 0) {
+        if (movimiento < 0) {
 
             siguientePagina();
 
