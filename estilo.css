@@ -1,6 +1,3 @@
-/* =========================================
-   CONFIGURACIÓN GENERAL
-========================================= */
 
 * {
     box-sizing: border-box;
@@ -12,317 +9,315 @@ html,
 body {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 body {
-    overflow: hidden;
-    background: #e9e9e9;
-    font-family: Arial, sans-serif;
-    touch-action: pan-y;
+    background:
+        radial-gradient(
+            circle at center,
+            #62584d 0%,
+            #302c28 55%,
+            #171614 100%
+        );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    touch-action: none;
+
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 
-/* =========================================
+/* =================================
    ESCENARIO
-========================================= */
+================================= */
 
 .escenario {
     width: 100vw;
     height: 100vh;
 
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     perspective: 1800px;
-
-    overflow: hidden;
 }
 
 
-/* =========================================
+/* =================================
    LIBRO
-========================================= */
+================================= */
 
 .libro {
     position: relative;
 
-    width: min(90vw, 700px);
-    height: min(90vh, 900px);
+    width: min(86vw, 420px);
+    height: min(78vh, 600px);
 
     transform-style: preserve-3d;
 
+    /*
+       Ligera inclinación para dar
+       sensación de objeto físico.
+    */
     transform:
-        rotateX(2deg)
-        rotateY(-2deg);
+        rotateX(3deg)
+        rotateY(-3deg);
 
     transition:
-        transform 0.25s ease;
-
-    user-select: none;
-
-    cursor: grab;
-}
-
-.libro:active {
-    cursor: grabbing;
+        transform .3s ease;
 }
 
 
-/* =========================================
+/* =================================
+   SOMBRA DEL LIBRO
+================================= */
+
+.libro::before {
+    content: "";
+
+    position: absolute;
+
+    width: 92%;
+    height: 25px;
+
+    left: 4%;
+    bottom: -25px;
+
+    background: rgba(0,0,0,.5);
+
+    filter: blur(18px);
+
+    border-radius: 50%;
+
+    transform:
+        translateZ(-50px);
+
+    pointer-events: none;
+}
+
+
+/* =================================
    TAPAS
-========================================= */
+================================= */
 
 .tapa {
     position: absolute;
 
-    top: 0;
-    left: 0;
+    inset: 0;
 
-    width: 100%;
-    height: 100%;
-
-    overflow: hidden;
+    border-radius:
+        5px 15px 15px 5px;
 
     transform-style: preserve-3d;
 
-    backface-visibility: hidden;
-
-    transition:
-        transform 0.9s cubic-bezier(.65, .05, .36, 1);
-
-    transform-origin: left center;
+    overflow: hidden;
 }
 
 
-/* =========================================
+/* =================================
    PORTADA
-========================================= */
+================================= */
 
 .portada {
-    z-index: 100;
 
-    transform:
-        rotateY(0deg);
-
-    background: #fff;
-}
-
-.portada img {
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    display: block;
-
-    object-fit: cover;
-
-    pointer-events: none;
-}
-
-
-/* =========================================
-   CONTRAPORTADA
-========================================= */
-
-.contraportada {
-    z-index: 1;
-
-    transform:
-        rotateY(180deg);
+    z-index: 50;
 
     transform-origin: left center;
 
-    background: #fff;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,.25),
+            transparent 8%,
+            transparent 88%,
+            rgba(0,0,0,.25)
+        ),
+        #b9824c;
+
+    box-shadow:
+        8px 12px 30px rgba(0,0,0,.5),
+        inset 0 0 30px rgba(70,35,10,.25);
+
+    transition:
+        transform .9s
+        cubic-bezier(.2,.75,.2,1);
 }
 
-.contraportada img {
-    position: absolute;
 
-    top: 0;
-    left: 0;
+/*
+   Imagen de la portada
+*/
+
+.portada img {
 
     width: 100%;
     height: 100%;
-
-    display: block;
 
     object-fit: cover;
 
+    display: block;
+
     pointer-events: none;
 }
 
 
-/* =========================================
-   TEXTURA DE LAS TAPAS
-========================================= */
+/*
+   Textura de cartón
+*/
 
 .textura {
+
     position: absolute;
 
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
+    inset: 0;
 
     pointer-events: none;
 
-    z-index: 5;
+    opacity: .22;
+
+    background-image:
+
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(255,255,255,.15) 1px,
+            transparent 2px
+        ),
+
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            rgba(60,30,10,.12) 1px,
+            transparent 3px
+        );
+
+    mix-blend-mode: multiply;
 }
 
 
-/* =========================================
+/* =================================
+   CONTRAPORTADA
+================================= */
+
+.trasera {
+
+    background:
+        linear-gradient(
+            90deg,
+            #754a28,
+            #a36b3d,
+            #704521
+        );
+
+    box-shadow:
+        8px 10px 25px rgba(0,0,0,.45);
+
+    transform:
+        translateZ(-12px);
+}
+
+
+/* =================================
    HOJAS
-========================================= */
+================================= */
 
 .hoja {
+
     position: absolute;
 
-    top: 0;
-    left: 0;
+    inset: 5px;
 
-    width: 100%;
-    height: 100%;
+    background: #eee3ce;
+
+    transform-origin: left center;
 
     transform-style: preserve-3d;
 
-    transform-origin: left center;
+    border-radius:
+        3px 10px 10px 3px;
+
+    box-shadow:
+        3px 3px 12px rgba(0,0,0,.25);
 
     transition:
-        transform 0.9s cubic-bezier(.65, .05, .36, 1);
-
-    backface-visibility: hidden;
-
-    background: white;
-}
-
-
-/* =========================================
-   CARA DEL PAPEL
-========================================= */
-
-.cara {
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: white;
+        transform .9s
+        cubic-bezier(.2,.75,.2,1);
 
     overflow: hidden;
-
-    backface-visibility: hidden;
-
-    border-radius: 2px;
 }
 
 
-/* =========================================
-   IMÁGENES DE LAS PÁGINAS
-========================================= */
+/* =================================
+   IMAGEN DE CADA PÁGINA
+================================= */
+
+.cara,
+.reverso {
+
+    position: absolute;
+
+    inset: 0;
+
+    backface-visibility: hidden;
+
+    -webkit-backface-visibility: hidden;
+}
+
 
 .cara img {
+
     width: 100%;
     height: 100%;
-
-    display: block;
 
     object-fit: cover;
 
-    pointer-events: none;
+    display: block;
 
-    user-select: none;
+    pointer-events: none;
 }
 
 
-/* =========================================
-   REVERSO DE CADA HOJA
-========================================= */
+/* =================================
+   PARTE TRASERA DE LA HOJA
+================================= */
 
 .reverso {
-    position: absolute;
 
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    background: #fff;
+    background:
+        linear-gradient(
+            90deg,
+            #ddd0b8,
+            #f2e9d7,
+            #d7c8ad
+        );
 
     transform:
         rotateY(180deg);
-
-    backface-visibility: hidden;
-
-    overflow: hidden;
-
-    border-radius: 2px;
 }
 
 
-/* =========================================
-   HOJA VOLTEADA
-========================================= */
+/* =================================
+   PÁGINA GIRADA
+================================= */
 
 .hoja.volteada {
+
     transform:
         rotateY(-180deg);
 }
 
 
-/* =========================================
-   CONTRAPORTADA MOSTRADA
-========================================= */
+/* =================================
+   BORDE DE LAS HOJAS
+================================= */
 
-.contraportada.mostrada {
-    transform:
-        rotateY(0deg);
-}
+.hoja::after {
 
-
-/* =========================================
-   SOMBRA DEL LIBRO
-========================================= */
-
-.libro::after {
-    content: "";
-
-    position: absolute;
-
-    left: 5%;
-    right: 5%;
-
-    bottom: -25px;
-
-    height: 30px;
-
-    background: rgba(0, 0, 0, 0.18);
-
-    filter: blur(15px);
-
-    border-radius: 50%;
-
-    transform:
-        translateZ(-40px);
-
-    pointer-events: none;
-}
-
-
-/* =========================================
-   EFECTO DE BORDE DE LAS HOJAS
-========================================= */
-
-.hoja::before {
     content: "";
 
     position: absolute;
@@ -330,83 +325,51 @@ body {
     top: 0;
     right: 0;
 
-    width: 3px;
+    width: 12px;
     height: 100%;
 
     background:
         linear-gradient(
-            to right,
-            rgba(0,0,0,0.03),
-            rgba(0,0,0,0.12)
+            90deg,
+            transparent,
+            rgba(0,0,0,.13)
         );
-
-    z-index: 10;
 
     pointer-events: none;
 }
 
 
-/* =========================================
-   ADAPTACIÓN PARA TABLET
-========================================= */
-
-@media (max-width: 900px) {
-
-    .libro {
-        width: 88vw;
-        height: 88vh;
-    }
-
-}
-
-
-/* =========================================
-   ADAPTACIÓN PARA CELULAR
-========================================= */
+/* =================================
+   CELULAR
+================================= */
 
 @media (max-width: 600px) {
 
-    .escenario {
-        perspective: 1200px;
-    }
-
     .libro {
-        width: 92vw;
-        height: 88vh;
+
+        width: 88vw;
+
+        height: 76vh;
+
+        max-height: 620px;
 
         transform:
-            rotateX(1deg)
-            rotateY(-1deg);
+            rotateX(2deg)
+            rotateY(-2deg);
     }
 
 }
 
 
-/* =========================================
+/* =================================
    CELULARES PEQUEÑOS
-========================================= */
+================================= */
 
-@media (max-width: 400px) {
-
-    .libro {
-        width: 94vw;
-        height: 86vh;
-    }
-
-}
-
-
-/* =========================================
-   PANTALLAS HORIZONTALES
-========================================= */
-
-@media (orientation: landscape) and (max-height: 600px) {
+@media (max-height: 650px) {
 
     .libro {
-        width: auto;
-        height: 90vh;
 
-        aspect-ratio: 0.777 / 1;
+        height: 74vh;
     }
 
 }
