@@ -1,48 +1,54 @@
-const libro = document.getElementById("libro");
+javascript
+const libro =
+    document.getElementById("libro");
 
-const portada = document.getElementById("portada");
+const portada =
+    document.getElementById("portada");
 
-const hojas = Array.from(
-    document.querySelectorAll(".hoja")
-);
+const hojas =
+    Array.from(
+        document.querySelectorAll(
+            ".hoja:not(.portada):not(.contraportada)"
+        )
+    );
 
 let pagina = 0;
 
 
-/* =================================
+/* =========================================
    ORDEN DE LAS HOJAS
-================================= */
+========================================= */
 
-hojas.forEach((hoja, indice) => {
+hojas.forEach(
+    (hoja, indice) => {
 
-    hoja.style.zIndex =
-        hojas.length - indice + 1;
+        hoja.style.zIndex =
+            hojas.length - indice + 1;
 
-});
+    }
+);
 
 
-/* =================================
-   VARIABLES DEL MOVIMIENTO
-================================= */
+/* =========================================
+   VARIABLES TÁCTILES
+========================================= */
 
 let inicioX = 0;
 let inicioY = 0;
 
 let moviendo = false;
 
-let ultimaDireccion = 0;
 
-
-/* =================================
-   INICIO DEL TOQUE
-================================= */
+/* =========================================
+   INICIO DEL DEDO
+========================================= */
 
 libro.addEventListener(
     "touchstart",
-    function(e) {
+    function(evento) {
 
         const toque =
-            e.touches[0];
+            evento.touches[0];
 
         inicioX =
             toque.clientX;
@@ -59,18 +65,69 @@ libro.addEventListener(
 );
 
 
-/* =================================
-   FINAL DEL TOQUE
-================================= */
+/* =========================================
+   MOVIMIENTO DEL DEDO
+========================================= */
+
+libro.addEventListener(
+    "touchmove",
+    function(evento) {
+
+        if (!moviendo) {
+            return;
+        }
+
+        const toque =
+            evento.touches[0];
+
+        const desplazamiento =
+            toque.clientX - inicioX;
+
+
+        /*
+           Pequeña inclinación del libro
+           mientras arrastras.
+        */
+
+        let inclinacion =
+            desplazamiento / 30;
+
+
+        inclinacion =
+            Math.max(
+                -7,
+                Math.min(
+                    7,
+                    inclinacion
+                )
+            );
+
+
+        libro.style.transform =
+            `rotateX(2deg)
+             rotateY(${-2 + inclinacion}deg)`;
+
+    },
+    {
+        passive: true
+    }
+);
+
+
+/* =========================================
+   FINAL DEL DEDO
+========================================= */
 
 libro.addEventListener(
     "touchend",
-    function(e) {
+    function(evento) {
 
-        if (!moviendo) return;
+        if (!moviendo) {
+            return;
+        }
 
         const toque =
-            e.changedTouches[0];
+            evento.changedTouches[0];
 
         const finalX =
             toque.clientX;
@@ -78,18 +135,27 @@ libro.addEventListener(
         const finalY =
             toque.clientY;
 
+
         const diferenciaX =
             finalX - inicioX;
 
         const diferenciaY =
             finalY - inicioY;
 
+
         moviendo = false;
 
 
         /*
-          Si el movimiento es principalmente
-          vertical, no pasamos página.
+           Volver el libro a su posición.
+        */
+
+        libro.style.transform =
+            "rotateX(2deg) rotateY(-2deg)";
+
+
+        /*
+           Ignorar movimientos verticales.
         */
 
         if (
@@ -101,22 +167,23 @@ libro.addEventListener(
 
 
         /*
-          Distancia mínima.
+           Movimiento mínimo.
         */
 
         if (
-            Math.abs(diferenciaX) < 35
+            Math.abs(diferenciaX) < 40
         ) {
             return;
         }
 
 
         /*
-          IZQUIERDA:
-          abrir / siguiente página
+           DESLIZAR A LA IZQUIERDA
         */
 
-        if (diferenciaX < 0) {
+        if (
+            diferenciaX < 0
+        ) {
 
             siguientePagina();
 
@@ -124,8 +191,7 @@ libro.addEventListener(
 
 
         /*
-          DERECHA:
-          regresar
+           DESLIZAR A LA DERECHA
         */
 
         else {
@@ -141,20 +207,22 @@ libro.addEventListener(
 );
 
 
-/* =================================
+/* =========================================
    SIGUIENTE PÁGINA
-================================= */
+========================================= */
 
 function siguientePagina() {
 
+
     /*
-       Primero se abre la portada.
+       Primero abrimos la portada.
     */
 
     if (pagina === 0) {
 
-        portada.style.transform =
-            "rotateY(-180deg)";
+        portada.classList.add(
+            "volteada"
+        );
 
         pagina++;
 
@@ -163,11 +231,12 @@ function siguientePagina() {
 
 
     /*
-       Después se pasan las hojas.
+       Luego pasamos las páginas.
     */
 
     const indice =
         pagina - 1;
+
 
     if (
         indice >= hojas.length
@@ -180,14 +249,15 @@ function siguientePagina() {
         .classList
         .add("volteada");
 
+
     pagina++;
 
 }
 
 
-/* =================================
+/* =========================================
    PÁGINA ANTERIOR
-================================= */
+========================================= */
 
 function paginaAnterior() {
 
@@ -197,14 +267,15 @@ function paginaAnterior() {
 
 
     /*
-       Si estamos en la primera página,
-       volvemos a cerrar la portada.
+       Si estamos viendo la primera
+       página, cerramos la portada.
     */
 
     if (pagina === 1) {
 
-        portada.style.transform =
-            "rotateY(0deg)";
+        portada.classList.remove(
+            "volteada"
+        );
 
         pagina--;
 
@@ -213,11 +284,12 @@ function paginaAnterior() {
 
 
     /*
-       Regresar una hoja.
+       Regresar una página.
     */
 
     const indice =
         pagina - 2;
+
 
     if (
         indice < 0
@@ -230,88 +302,27 @@ function paginaAnterior() {
         .classList
         .remove("volteada");
 
+
     pagina--;
 
 }
 
 
-/* =================================
-   ARRASTRAR EL LIBRO
-================================= */
+/* =========================================
+   MOUSE PARA COMPUTADORA
+========================================= */
 
-let tocando = false;
+let mouseInicioX = 0;
 
-libro.addEventListener(
-    "touchmove",
-    function(e) {
-
-        if (!moviendo) return;
-
-        const toque =
-            e.touches[0];
-
-        const desplazamiento =
-            toque.clientX - inicioX;
-
-
-        /*
-           Pequeña inclinación del libro
-           mientras se mueve el dedo.
-        */
-
-        let inclinacion =
-            desplazamiento / 25;
-
-        inclinacion =
-            Math.max(
-                -8,
-                Math.min(
-                    8,
-                    inclinacion
-                )
-            );
-
-        libro.style.transform =
-            `rotateX(2deg)
-             rotateY(${-2 + inclinacion}deg)`;
-
-    },
-    {
-        passive: true
-    }
-);
-
-
-/* =================================
-   VOLVER A POSICIÓN NORMAL
-================================= */
-
-libro.addEventListener(
-    "touchend",
-    function() {
-
-        libro.style.transform =
-            "rotateX(2deg) rotateY(-2deg)";
-
-    }
-);
-
-
-/* =================================
-   TAMBIÉN FUNCIONA CON MOUSE
-   PARA PROBAR EN COMPUTADORA
-================================= */
-
-let mouseInicio = 0;
 let mouseActivo = false;
 
 
 libro.addEventListener(
     "mousedown",
-    function(e) {
+    function(evento) {
 
-        mouseInicio =
-            e.clientX;
+        mouseInicioX =
+            evento.clientX;
 
         mouseActivo = true;
 
@@ -321,12 +332,15 @@ libro.addEventListener(
 
 document.addEventListener(
     "mouseup",
-    function(e) {
+    function(evento) {
 
-        if (!mouseActivo) return;
+        if (!mouseActivo) {
+            return;
+        }
 
         const diferencia =
-            e.clientX - mouseInicio;
+            evento.clientX -
+            mouseInicioX;
 
         mouseActivo = false;
 
@@ -343,6 +357,37 @@ document.addEventListener(
             siguientePagina();
 
         } else {
+
+            paginaAnterior();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   TECLADO
+========================================= */
+
+document.addEventListener(
+    "keydown",
+    function(evento) {
+
+        if (
+            evento.key ===
+            "ArrowRight"
+        ) {
+
+            siguientePagina();
+
+        }
+
+
+        if (
+            evento.key ===
+            "ArrowLeft"
+        ) {
 
             paginaAnterior();
 
