@@ -13,6 +13,20 @@
     <title>Invitación</title>
 
     <link rel="stylesheet" href="estilo.css">
+
+    <style>
+        /* Zoom y desplazamiento del libro con gestos táctiles */
+        .escenario {
+            touch-action: none;
+            overflow: visible;
+            --zoom-libro: 1;
+            --mover-x: 0px;
+            --mover-y: 0px;
+            transform: translate(var(--mover-x), var(--mover-y)) scale(var(--zoom-libro));
+            transform-origin: center center;
+            will-change: transform;
+        }
+    </style>
 </head>
 
 <body>
@@ -125,8 +139,116 @@
 
     </audio>
 
+    <!-- Música de fondo: colocar musica-fondo.mp3 dentro de la carpeta sonidos -->
+    <audio id="musicaFondo" loop preload="auto">
+        <source src="sonidos/musica-fondo.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="libro.js"></script>
+
+    <script>
+    (() => {
+        const escenario = document.querySelector('.escenario');
+        const musica = document.getElementById('musicaFondo');
+
+        if (!escenario) return;
+
+        let punteros = new Map();
+        let distanciaInicial = 0;
+        let zoomInicial = 1;
+        let centroInicial = { x: 0, y: 0 };
+        let moverInicial = { x: 0, y: 0 };
+        let zoom = 1;
+        let moverX = 0;
+        let moverY = 0;
+        let musicaIniciada = false;
+
+        const limitar = (valor, min, max) => Math.min(max, Math.max(min, valor));
+
+        function aplicarTransformacion() {
+            escenario.style.setProperty('--zoom-libro', zoom);
+            escenario.style.setProperty('--mover-x', moverX + 'px');
+            escenario.style.setProperty('--mover-y', moverY + 'px');
+        }
+
+        function distancia(a, b) {
+            return Math.hypot(a.x - b.x, a.y - b.y);
+        }
+
+        function centro(a, b) {
+            return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+        }
+
+        function iniciarMusica() {
+            if (musicaIniciada || !musica) return;
+            musica.volume = 0.35;
+            const reproduccion = musica.play();
+            if (reproduccion && typeof reproduccion.then === 'function') {
+                reproduccion.then(() => {
+                    musicaIniciada = true;
+                }).catch(() => {
+                    /* Se volverá a intentar en la siguiente interacción. */
+                });
+            } else {
+                musicaIniciada = true;
+            }
+        }
+
+        escenario.addEventListener('pointerdown', (evento) => {
+            iniciarMusica();
+            punteros.set(evento.pointerId, { x: evento.clientX, y: evento.clientY });
+
+            if (punteros.size === 2) {
+                const puntos = Array.from(punteros.values());
+                distanciaInicial = distancia(puntos[0], puntos[1]);
+                zoomInicial = zoom;
+                centroInicial = centro(puntos[0], puntos[1]);
+                moverInicial = { x: moverX, y: moverY };
+            }
+        }, { passive: true });
+
+        escenario.addEventListener('pointermove', (evento) => {
+            if (!punteros.has(evento.pointerId)) return;
+
+            punteros.set(evento.pointerId, { x: evento.clientX, y: evento.clientY });
+
+            if (punteros.size >= 2 && distanciaInicial > 0) {
+                const puntos = Array.from(punteros.values()).slice(0, 2);
+                const nuevaDistancia = distancia(puntos[0], puntos[1]);
+                const nuevoCentro = centro(puntos[0], puntos[1]);
+
+                zoom = limitar(zoomInicial * (nuevaDistancia / distanciaInicial), 1, 3.5);
+                moverX = moverInicial.x + (nuevoCentro.x - centroInicial.x);
+                moverY = moverInicial.y + (nuevoCentro.y - centroInicial.y);
+                aplicarTransformacion();
+            }
+        }, { passive: true });
+
+        function terminarPuntero(evento) {
+            punteros.delete(evento.pointerId);
+            if (punteros.size < 2) distanciaInicial = 0;
+        }
+
+        escenario.addEventListener('pointerup', terminarPuntero, { passive: true });
+        escenario.addEventListener('pointercancel', terminarPuntero, { passive: true });
+        escenario.addEventListener('lostpointercapture', terminarPuntero, { passive: true });
+
+        /* Doble toque/clic restaura el tamaño original. */
+        let ultimoToque = 0;
+        escenario.addEventListener('touchend', (evento) => {
+            const ahora = Date.now();
+            if (ahora - ultimoToque < 300 && evento.touches.length === 0) {
+                zoom = 1;
+                moverX = 0;
+                moverY = 0;
+                aplicarTransformacion();
+            }
+            ultimoToque = ahora;
+        }, { passive: true });
+
+        aplicarTransformacion();
+    })();
+    </script>
 
 </body>
 </html>
